@@ -205,8 +205,20 @@ class DiceTests(unittest.TestCase):
         raise NotImplementedError()
 
     @unittest.skip
-    def test_adding_die_of_same_type_to_dice(self):
-        self.dice.add(SixSidedDie())
+    def test_adding_single_die_to_dice(self):
+        raise NotImplementedError()
+    
+    @unittest.skip
+    def test_adding_multiple_die_to_dice(self):
+        raise NotImplementedError()
+    
+    @unittest.skip
+    def test_removing_die_from_dice_by_index(self):
+        raise NotImplementedError()
+    
+    @unittest.skip
+    def test_removing_multiple_dice_from_dice_by_indexes(self):
+        raise NotImplementedError()
 
 
 
