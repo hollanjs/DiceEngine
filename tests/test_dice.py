@@ -163,7 +163,7 @@ class DiceTests(unittest.TestCase):
         self.assertNotEqual(self.dice.dice[2].rolled, 0)
 
         self.dice.unfreeze_dice([0,1])
-        self.roll()
+        self.dice.roll()
         self.assertNotEqual(self.dice.dice[0].rolled, 0)
         self.assertNotEqual(self.dice.dice[1].rolled, 0)
 
@@ -196,9 +196,11 @@ class DiceTests(unittest.TestCase):
         self.assertNotEqual(self.dice.dice[1].rolled, 0)
         self.assertNotEqual(self.dice.dice[2].rolled, 0)
     
+    @unittest.skip
     def test_get_count_of_specific_roll_value(self):
         raise NotImplementedError()
     
+    @unittest.skip
     def test_get_array_of_roll_value_counts(self):
         raise NotImplementedError()
 
