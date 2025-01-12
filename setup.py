@@ -4,7 +4,7 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(
-    name="DiceGameEngine_Dev_JSH",
+    name="DiceEngine",
     verison="0.0.1",
     description="Dice game engine to build various types of dice games",
     package_dir={"": "src"},
@@ -16,9 +16,10 @@ setup(
     author_email="jshollandsworth@gmail.com",
     license="Unlicensed",
     classifiers=[
-        "License :: Unlicensed",
-        "Programming Language :: Python :: 3.12",
-        "Operating System :: OS Independant"
+        'Intended Audience :: Developers',
+        'Programming Language :: Python :: 3 :: Only',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
     ],
     python_requires=">=3.12"
 )
