@@ -40,6 +40,49 @@ class DiceTests(unittest.TestCase):
         self.assertEqual(self.dice.dice[1].rolled, 0)
         self.assertEqual(self.dice.dice[2].rolled, 0)
 
+    @unittest.skip
+    def test_get_die_index_from_ref(self):
+        # reset self.dice
+        self.setUp()
+
+        #set specific die index state
+        object.__setattr__(self.dice.dice[1], "rolled", 3)
+        self.assertEqual([_.rolled for _ in self.dice], [0,3,0])
+
+        #test getting index from ref
+        test_die = self.dice.dice[1]
+        self.assertEqual(self.dice.get_index(test_die), 1)
+
+    @unittest.skip
+    def test_get_multiple_dice_indexes_from_ref(self):
+        # reset self.dice
+        self.setUp()
+
+        #set specific die index state
+        object.__setattr__(self.dice.dice[1], "rolled", 3)
+        self.assertEqual([_.rolled for _ in self.dice], [0,3,0])
+
+        #test getting index from ref
+        test_dice = [die for die in self.dice if die.rolled == 0]
+        self.assertEqual(self.dice.get_index(test_dice), [0,2])
+
+    @unittest.skip
+    def test_get_die_ref_by_value(self):
+        # reset self.dice
+        self.setUp()
+
+        #set specific die index state
+        object.__setattr__(self.dice.dice[1], "rolled", 3)
+        self.assertEqual([_.rolled for _ in self.dice], [0,3,0])
+
+        #test getting all dice with value 0
+        cached_die_1 = self.dice.dice[0]
+        cached_die_2 = self.dice.dice[2]
+        found_dice = self.dice.get_dice_with_value(0)
+        self.assertEqual(len(found_dice), 2)
+        self.assertIs(found_dice[0], cached_die_1)
+        self.assertIs(found_dice[1], cached_die_2)
+
     def test_rolling_dice(self):
         rolled = self.dice.roll()
 
@@ -110,7 +153,7 @@ class DiceTests(unittest.TestCase):
         self.assertNotEqual(self.dice.current_total, 0)
         self.assertNotEqual(self.dice.previous_total, 0)
 
-    def test_freezing_single_die(self):
+    def test_freezing_single_die_by_index(self):
         # reset self.dice
         self.setUp()
 
@@ -121,8 +164,23 @@ class DiceTests(unittest.TestCase):
         self.assertNotEqual(self.dice.dice[0].rolled, 0)
         self.assertEqual(self.dice.dice[1].rolled, 0)
         self.assertNotEqual(self.dice.dice[2].rolled, 0)
+
+    @unittest.skip
+    def test_freezing_single_die_by_ref(self):
+        # reset self.dice
+        self.setUp()
+
+        #set die ref
+        test_die = self.dice.dice[1]
+        self.dice.freeze_die(test_die)
+        # self.dice.dice[1].toggle_freeze()
+        self.dice.roll()
+
+        self.assertNotEqual(self.dice.dice[0].rolled, 0)
+        self.assertEqual(self.dice.dice[1].rolled, 0)
+        self.assertNotEqual(self.dice.dice[2].rolled, 0)
     
-    def test_unfreezing_single_die(self):
+    def test_unfreezing_single_die_by_index(self):
         # reset self.dice
         self.setUp()
 
@@ -140,21 +198,51 @@ class DiceTests(unittest.TestCase):
         # self.dice.dice[1].toggle_freeze()
         self.dice.roll()
         self.assertNotEqual(self.dice.dice[1].rolled, 0)
+
+    @unittest.skip
+    def test_unfreezing_single_die_by_ref(self):
+        # reset self.dice
+        self.setUp()
+
+        test_die = self.dice.dice[1]
+        self.dice.freeze_die(test_die)
+
+        #validate is_frozen fsag
+        self.dice.roll()
+        self.assertNotEqual(self.dice.dice[0].rolled, 0)
+        self.assertEqual(self.dice.dice[1].rolled, 0)
+        self.assertNotEqual(self.dice.dice[2].rolled, 0)
+
+        #unfreeze and test
+        self.dice.unfreeze_die(test_die)
+        self.dice.roll()
+        self.assertNotEqual(self.dice.dice[1].rolled, 0)
     
-    def test_freezing_multiple_dice(self):
+    def test_freezing_multiple_dice_by_index(self):
         # reset self.dice
         self.setUp()
 
         self.dice.freeze_dice([0,1])
-        # self.dice.dice[0].toggle_freeze()
-        # self.dice.dice[1].toggle_freeze()
         self.dice.roll()
 
         self.assertEqual(self.dice.dice[0].rolled, 0)
         self.assertEqual(self.dice.dice[1].rolled, 0)
         self.assertNotEqual(self.dice.dice[2].rolled, 0)
 
-    def test_unfreezing_multiple_dice(self):
+    @unittest.skip
+    def test_freezing_multiple_dice_by_ref(self):
+        # reset self.dice
+        self.setUp()
+
+        test_dice = self.dice.dice[0:2]
+        self.dice.freeze_dice(test_dice)
+        self.dice.roll()
+
+        self.assertEqual(self.dice.dice[0].rolled, 0)
+        self.assertEqual(self.dice.dice[1].rolled, 0)
+        self.assertNotEqual(self.dice.dice[2].rolled, 0)
+
+    def test_unfreezing_multiple_dice_by_index(self):
         # reset self.dice
         self.setUp()
 
@@ -166,6 +254,24 @@ class DiceTests(unittest.TestCase):
         self.assertNotEqual(self.dice.dice[2].rolled, 0)
 
         self.dice.unfreeze_dice([0,1])
+        self.dice.roll()
+        self.assertNotEqual(self.dice.dice[0].rolled, 0)
+        self.assertNotEqual(self.dice.dice[1].rolled, 0)
+
+    @unittest.skip
+    def test_unfreezing_multiple_dice_by_ref(self):
+        # reset self.dice
+        self.setUp()
+
+        test_dice = self.dice.dice[0:2]
+        self.dice.freeze_dice(test_dice)
+        self.dice.roll()
+
+        self.assertEqual(self.dice.dice[0].rolled, 0)
+        self.assertEqual(self.dice.dice[1].rolled, 0)
+        self.assertNotEqual(self.dice.dice[2].rolled, 0)
+
+        self.dice.unfreeze_dice(test_dice)
         self.dice.roll()
         self.assertNotEqual(self.dice.dice[0].rolled, 0)
         self.assertNotEqual(self.dice.dice[1].rolled, 0)
@@ -253,18 +359,51 @@ class DiceTests(unittest.TestCase):
         self.assertEqual(len(self.dice.current_roll), 7)
         self.assertEqual(len(self.dice.previous_roll), 7)
     
+    @unittest.skip
     def test_removing_die_from_dice_by_index(self):
         # reset self.dice
         self.setUp()
         self.dice.add_dice(2) #5 total dice
-        #force dice state
-        for ind, die in enumerate(self.dice):
-            object.__setattr__(self.dice.roll_history[0][0], "rolled", 4)
+        self.assertEqual(self.dice.count, 5)
+        #force dice state to all 1's
+        for die in self.dice:
+            object.__setattr__(die, "rolled", 1)
+        # set 4th index specifically to 3
+        object.__setattr__(self.dice.dice[3], "rolled", 3)
+        #ensure state
+        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,3,1])
+
+        #test removal
+        self.dice.remove_die(3)
+        self.assertEqual(self.dice.count, 4)
+        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,1])
+
+    @unittest.skip
+    def test_removing_die_from_dice_by_ref(self):
+        # reset self.dice
+        self.setUp()
+        self.dice.add_dice(2) #5 total dice
+        self.assertEqual(self.dice.count, 5)
+        #force dice state to all 1's
+        for die in self.dice:
+            object.__setattr__(die, "rolled", 1)
+        # set 4th index specifically to 3
+        object.__setattr__(self.dice.dice[3], "rolled", 3)
+        #ensure state
+        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,3,1])
+
+        #test removal
+        test_die = self.dice.dice[3]
+        self.dice.remove_die(test_die)
+        self.assertEqual(self.dice.count, 4)
+        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,1])
         
-        
-    
     @unittest.skip
     def test_removing_multiple_dice_from_dice_by_indexes(self):
+        raise NotImplementedError()
+    
+    @unittest.skip
+    def test_removing_multiple_dice_from_dice_by_ref(self):
         raise NotImplementedError()
 
     @unittest.skip
