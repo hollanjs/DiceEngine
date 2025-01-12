@@ -1,6 +1,8 @@
 import unittest
 
-from src.RollManager import RollManager
+from src.DiceEngine import (
+    RollManager,
+)
 
 
 class TestRollManager(unittest.TestCase):

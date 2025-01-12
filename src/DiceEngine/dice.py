@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Type
 import copy
 
-from src.Die import *
+from .die import Die
 
 @dataclass
 class Dice:
@@ -16,10 +16,10 @@ class Dice:
         roll_history (List[List[Die]]): A history of all past rolls. Each element is
             a snapshot (list) of dice objects from a single roll.
     """
-    die_type: Type["Die"]
+    die_type: Type[Die]
     count: int
-    dice: List["Die"] = field(init=False)
-    roll_history: List[List["Die"]] = field(init=False, repr=False)
+    dice: List[Die] = field(init=False)
+    roll_history: List[List[Die]] = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         """
@@ -30,7 +30,7 @@ class Dice:
         self.roll_history = [copy.deepcopy(self.dice)]
 
     @classmethod
-    def from_dice_list(cls, dice_list: List["Die"]) -> "Dice":
+    def from_dice_list(cls, dice_list: List[Die]) -> "Dice":
         """
         Creates a Dice object from an existing list of dice. Assumes
         all dice in the list have the same type, taking the first
@@ -62,11 +62,11 @@ class Dice:
         return iter(self.dice)
 
     @property
-    def current_roll(self) -> List["Die"]:
+    def current_roll(self) -> List[Die]:
         return self.roll_history[-1]
 
     @property
-    def previous_roll(self) -> List["Die"]:
+    def previous_roll(self) -> List[Die]:
         if len(self.roll_history) > 1:
             return self.roll_history[-2]
         else:
@@ -130,11 +130,11 @@ class Dice:
         self.count -= 1
 
     @staticmethod
-    def pprint_str(dice: List["Die"]) -> str:
+    def pprint_str(dice: List[Die]) -> str:
         return f"{len(dice)}{dice[0].name}, [{', '.join(str(d.rolled) for d in dice)}]"
 
     @staticmethod
-    def pprint_dice(dice: List["Die"]) -> None:
+    def pprint_dice(dice: List[Die]) -> None:
         print(Dice.pprint_str(dice))
 
     def pprint_roll_history(self) -> None:

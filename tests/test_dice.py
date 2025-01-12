@@ -1,7 +1,10 @@
 import unittest
 
-from src.Dice import Dice
-from src.Die import Die, SixSidedDie
+from src.DiceEngine import (
+    Dice, 
+    Die, 
+    SixSidedDie,
+)
 
 
 class DiceTests(unittest.TestCase):

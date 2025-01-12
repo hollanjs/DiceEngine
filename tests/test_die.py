@@ -1,12 +1,21 @@
 import unittest
 from typing import Type
 
-from src.Die import Die, FourSidedDie, SixSidedDie, EightSidedDie, TenSidedDie, TwelveSidedDie, TwentySidedDie, OneHundredSidedDie
+from src.DiceEngine import (
+    FourSidedDie, 
+    SixSidedDie, 
+    EightSidedDie, 
+    TenSidedDie, 
+    TwelveSidedDie, 
+    TwentySidedDie, 
+    OneHundredSidedDie,
+    die,
+)
 
 
 class DieTypeAndPropertyTestCases(unittest.TestCase):
     @staticmethod
-    def TestDieProperties(test: unittest.TestCase, die: Die, die_type: Type, num_faces: int) -> None:
+    def TestDieProperties(test: unittest.TestCase, die: die, die_type: Type, num_faces: int) -> None:
         valid_rolls = list(range(1, (num_faces+1)))
 
         test.assertIsInstance(die, die_type)

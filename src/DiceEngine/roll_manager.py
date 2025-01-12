@@ -1,6 +1,9 @@
 from typing import Union, List
-from src.Dice import Dice
-from src.Die import *
+
+
+from .die import Die
+from .dice import Dice
+
 
 
 class RollManager:
@@ -10,17 +13,17 @@ class RollManager:
     or regular rolls.
 
     Example usage:
-        single_die = SixSidedDie()
+        single_Die = SixSidedDie()
         multiple_dice_list = [SixSidedDie() for _ in range(4)]
-        dice_container = Dice(die_type=SixSidedDie, count=4)
+        dice_container = Dice(Die_type=SixSidedDie, count=4)
 
         # All can be passed to RollManager:
-        RollManager(single_die).roll()
+        RollManager(single_Die).roll()
         RollManager(multiple_dice_list).roll_with_advantage()
         RollManager(dice_container).roll_with_disadvantage()
     """
 
-    def __init__(self, dice_input: Union["Die", List["Die"], Dice]) -> None:
+    def __init__(self, dice_input: Union[Die, List[Die], Dice]) -> None:
         """
         Constructs a RollManager that always manages a single Dice object
         internally, regardless of the initial input type.
@@ -33,8 +36,8 @@ class RollManager:
             ValueError: If an empty list is provided or the argument is invalid.
         """
         if isinstance(dice_input, Die):
-            # Single die -> build a Dice container with count=0,
-            # then add the single die as a list.
+            # Single Die -> build a Dice container with count=0,
+            # then add the single Die as a list.
             self._dice = Dice.from_dice_list([dice_input])
         elif isinstance(dice_input, list):
             if not dice_input:
@@ -62,14 +65,14 @@ class RollManager:
 
     def roll_with_advantage(self) -> int:
         """
-        Performs a roll with advantage by adding one extra die, rolling all dice,
+        Performs a roll with advantage by adding one extra Die, rolling all dice,
         then removing the lowest roll, and returning the total of the remaining dice.
 
         Returns:
             int: The total after rolling with advantage.
         """
         print(f"Rolling with advantage. Adding an extra {
-              self._dice.die_type.__name__}.")
+              self._dice.Die_type.__name__}.")
         self._dice.add_dice(number=1)
         self._dice.roll()
         self._dice.remove_lowest_roll()
@@ -79,14 +82,14 @@ class RollManager:
 
     def roll_with_disadvantage(self) -> int:
         """
-        Performs a roll with disadvantage by adding one extra die, rolling all dice,
+        Performs a roll with disadvantage by adding one extra Die, rolling all dice,
         then removing the highest roll, and returning the total of the remaining dice.
 
         Returns:
             int: The total after rolling with disadvantage.
         """
         print(f"Rolling with disadvantage. Adding an extra {
-              self._dice.die_type.__name__}.")
+              self._dice.Die_type.__name__}.")
         self._dice.add_dice(number=1)
         self._dice.roll()
         self._dice.remove_highest_roll()
@@ -112,18 +115,18 @@ class RollManager:
         """
         self._dice.add_dice(number=number)
         print(f"Added {number} {
-              self._dice.die_type.__name__} die/dice to RollManager.")
+              self._dice.Die_type.__name__} Die/dice to RollManager.")
 
     def remove_lowest_roll(self) -> None:
         """
-        Removes the die with the lowest rolled value from the Dice object.
+        Removes the Die with the lowest rolled value from the Dice object.
         This only affects the dice pool for subsequent rolls.
         """
         self._dice.remove_lowest_roll()
 
     def remove_highest_roll(self) -> None:
         """
-        Removes the die with the highest rolled value from the Dice object.
+        Removes the Die with the highest rolled value from the Dice object.
         This only affects the dice pool for subsequent rolls.
         """
         self._dice.remove_highest_roll()
