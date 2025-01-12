@@ -8,7 +8,7 @@ DICE BATTLE
     Player with the highest total wins
 '''
 
-if __name__ == "__main__":
+def dice_battle():
     Player1 = Dice(SixSidedDie, 5)
     Player2 = Dice(SixSidedDie, 5)
 
@@ -24,3 +24,7 @@ if __name__ == "__main__":
         else:
             print(f"Player 2 wins with a total of {Player2.current_total} ({Player2.__str__()})")
             print(f"Player 1 loses with a total of {Player1.current_total} ({Player1.__str__()})")
+
+
+if __name__ == "__main__":
+    dice_battle()
