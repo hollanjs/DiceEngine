@@ -196,6 +196,74 @@ class DiceTests(unittest.TestCase):
         self.assertNotEqual(self.dice.dice[1].rolled, 0)
         self.assertNotEqual(self.dice.dice[2].rolled, 0)
     
+    def test_adding_single_die_to_dice(self):
+        # reset self.dice
+        self.setUp()
+
+        #setup dice and verify test default
+        self.dice.roll()
+        self.assertEqual(len(self.dice.current_roll), 3)
+        self.assertEqual(len(self.dice.previous_roll), 3)
+        with self.assertRaises(IndexError):
+            self.dice.dice[3]
+
+        # check adding unrolled die
+        self.dice.add_dice()
+        self.assertIsNotNone(self.dice.dice[3])
+        self.assertEqual(self.dice.count, 4)
+        self.assertEqual(self.dice.dice[3].rolled, 0)
+
+        # check history update of new die on rolls
+        self.dice.roll()
+        self.assertNotEqual(self.dice.dice[3].rolled, 0)
+        self.assertEqual(len(self.dice.current_roll), 4)
+        self.assertEqual(len(self.dice.previous_roll), 3)
+        self.dice.roll()
+        self.assertEqual(len(self.dice.current_roll), 4)
+        self.assertEqual(len(self.dice.previous_roll), 4)
+    
+    def test_adding_multiple_die_to_dice(self):
+        # reset self.dice
+        self.setUp()
+
+        #setup dice and verify test default
+        self.dice.roll()
+        self.assertEqual(len(self.dice.current_roll), 3)
+        self.assertEqual(len(self.dice.previous_roll), 3)
+        with self.assertRaises(IndexError):
+            self.dice.dice[3]
+
+        # check adding multiple unrolled die
+        self.dice.add_dice(4) #bring dice total to 7
+        self.assertIsNotNone(self.dice.dice[6])
+        self.assertEqual(self.dice.count, 7)
+        # check all new dice are unrolled
+        self.assertTrue(all([x.rolled == 0 for x in self.dice.dice[3:]]))
+
+        # check history update of new die on rolls
+        self.dice.roll()
+        # check all new dice are no longer 0 after roll
+        self.assertTrue(all([x.rolled != 0 for x in self.dice.dice[3:]]))
+        self.assertEqual(len(self.dice.current_roll), 7)
+        self.assertEqual(len(self.dice.previous_roll), 3)
+        self.dice.roll()
+        self.assertEqual(len(self.dice.current_roll), 7)
+        self.assertEqual(len(self.dice.previous_roll), 7)
+    
+    def test_removing_die_from_dice_by_index(self):
+        # reset self.dice
+        self.setUp()
+        self.dice.add_dice(2) #5 total dice
+        #force dice state
+        for ind, die in enumerate(self.dice):
+            object.__setattr__(self.dice.roll_history[0][0], "rolled", 4)
+        
+        
+    
+    @unittest.skip
+    def test_removing_multiple_dice_from_dice_by_indexes(self):
+        raise NotImplementedError()
+
     @unittest.skip
     def test_get_count_of_specific_roll_value(self):
         raise NotImplementedError()
@@ -203,23 +271,6 @@ class DiceTests(unittest.TestCase):
     @unittest.skip
     def test_get_array_of_roll_value_counts(self):
         raise NotImplementedError()
-
-    @unittest.skip
-    def test_adding_single_die_to_dice(self):
-        raise NotImplementedError()
-    
-    @unittest.skip
-    def test_adding_multiple_die_to_dice(self):
-        raise NotImplementedError()
-    
-    @unittest.skip
-    def test_removing_die_from_dice_by_index(self):
-        raise NotImplementedError()
-    
-    @unittest.skip
-    def test_removing_multiple_dice_from_dice_by_indexes(self):
-        raise NotImplementedError()
-
 
 
 

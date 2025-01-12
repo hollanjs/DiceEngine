@@ -1,4 +1,9 @@
 {
+    "folders": [
+        {
+            "path": "DiceEngine"
+        }
+    ],
     "python.testing.unittestArgs": [
         "-v",
         "-s",
