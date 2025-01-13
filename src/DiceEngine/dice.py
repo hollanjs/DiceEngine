@@ -111,8 +111,34 @@ class Dice:
     def pprint_str(dice: List[Die]) -> str:
         return f"{len(dice)}{dice[0].name}, [{', '.join(str(d.rolled) for d in dice)}]"
             
-    def freeze(dice=None, all_dice=False):
-        pass
+    def __validate_method_params_freeze_unfreeze(dice: Die | List[Die] | None, all_dice: bool) -> None:
+        if dice is None and all_dice is False:
+            raise ValueError('No input provided - expected input for dice parameter or all_dice=True')
+        if dice is not None and all_dice is True:
+            raise ValueError('You cannot input a value for the dice parameter and set all_dice=True')
 
-    def unfreeze(dice=None, all_dice=False):
-        pass
+        if isinstance(dice, Die):
+            return
+        elif isinstance(dice, list) and all(isinstance(d, Die) for d in dice):
+            return
+        else:
+            non_die_values = [d for d in (dice if isinstance(dice, list) else [dice]) if not isinstance(d, Die)]
+            raise ValueError(
+                'One or more values passed in for dice '
+                'is not a subclass of Die or a list of objects that are subclasses of type Die: '
+                f'{", ".join(map(str, non_die_values))}'
+            )
+
+    def freeze(self, dice: Die | List[Die] | None = None, all_dice: bool = False) -> None:
+        self.__validate_method_params_freeze_unfreeze(dice, all_dice)
+        if isinstance(dice, Die):
+            pass
+        elif isinstance(dice, List) and all([isinstance(_, Die) for _ in dice]):
+            pass
+
+    def unfreeze(dice: Die | List[Die] | None = None, all_dice: bool = False) -> None:
+        self.__validate_method_params_freeze_unfreeze(dice, all_dice)
+        if isinstance(dice, Die):
+            pass
+        elif isinstance(dice, List) and all([isinstance(_, Die) for _ in dice]):
+            pass
