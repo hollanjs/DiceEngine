@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Type
+from typing import List, Type, Iterator
 import copy
 
 from .die import Die
@@ -58,7 +58,7 @@ class Dice:
     def __len__(self) -> int:
         return len(self.dice)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Die]:
         return iter(self.dice)
 
     @property
@@ -111,18 +111,24 @@ class Dice:
     def pprint_str(dice: List[Die]) -> str:
         return f"{len(dice)}{dice[0].name}, [{', '.join(str(d.rolled) for d in dice)}]"
             
-    def __validate_method_params_freeze_unfreeze(dice: Die | List[Die] | None, all_dice: bool) -> None:
-        if dice is None and all_dice is False:
+    def __validate_method_params_freeze_unfreeze(self, dice: Die | List[Die] | None, all_dice: bool) -> None:
+        if not dice and not all_dice:
             raise ValueError('No input provided - expected input for dice parameter or all_dice=True')
-        if dice is not None and all_dice is True:
+        
+        if dice is not None and all_dice:
             raise ValueError('You cannot input a value for the dice parameter and set all_dice=True')
-
+        
         if isinstance(dice, Die):
             return
-        elif isinstance(dice, list) and all(isinstance(d, Die) for d in dice):
+        
+        if isinstance(dice, list) and all(isinstance(d, Die) for d in dice):
             return
-        else:
-            non_die_values = [d for d in (dice if isinstance(dice, list) else [dice]) if not isinstance(d, Die)]
+        
+        if not dice and all_dice:
+            return
+        
+        non_die_values = [d for d in (dice if isinstance(dice, list) else [dice]) if not isinstance(d, Die)]
+        if non_die_values:
             raise ValueError(
                 'One or more values passed in for dice '
                 'is not a subclass of Die or a list of objects that are subclasses of type Die: '
@@ -130,15 +136,21 @@ class Dice:
             )
 
     def freeze(self, dice: Die | List[Die] | None = None, all_dice: bool = False) -> None:
-        self.__validate_method_params_freeze_unfreeze(dice, all_dice)
+        self.__validate_method_params_freeze_unfreeze(dice=dice, all_dice=all_dice)
         if isinstance(dice, Die):
-            pass
+            dice.is_frozen or dice.toggle_freeze()
         elif isinstance(dice, List) and all([isinstance(_, Die) for _ in dice]):
-            pass
+            for die in dice:
+                self.freeze(die)
+        elif all_dice:
+            self.freeze(self.dice)
 
-    def unfreeze(dice: Die | List[Die] | None = None, all_dice: bool = False) -> None:
-        self.__validate_method_params_freeze_unfreeze(dice, all_dice)
+    def unfreeze(self, dice: Die | List[Die] | None = None, all_dice: bool = False) -> None:
+        self.__validate_method_params_freeze_unfreeze(dice=dice, all_dice=all_dice)
         if isinstance(dice, Die):
-            pass
+            dice.is_frozen and dice.toggle_freeze()
         elif isinstance(dice, List) and all([isinstance(_, Die) for _ in dice]):
-            pass
+            for die in dice:
+                self.unfreeze(die)
+        elif all_dice:
+            self.unfreeze(self.dice)
