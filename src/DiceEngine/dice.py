@@ -107,59 +107,12 @@ class Dice:
             self.dice.append(self.die_type())
             self.count += 1
 
-    def remove_lowest_roll(self) -> None:
-        """
-        Removes the die with the lowest `rolled` value from the
-        current set of dice. Raises ValueError if no dice remain.
-        """
-        if not self.dice:
-            raise ValueError("No dice to remove.")
-        lowest_die = min(self.dice, key=lambda d: d.rolled)
-        self.dice.remove(lowest_die)
-        self.count -= 1
-
-    def remove_highest_roll(self) -> None:
-        """
-        Removes the die with the highest `rolled` value from the
-        current set of dice. Raises ValueError if no dice remain.
-        """
-        if not self.dice:
-            raise ValueError("No dice to remove.")
-        highest_die = max(self.dice, key=lambda d: d.rolled)
-        self.dice.remove(highest_die)
-        self.count -= 1
-
     @staticmethod
     def pprint_str(dice: List[Die]) -> str:
         return f"{len(dice)}{dice[0].name}, [{', '.join(str(d.rolled) for d in dice)}]"
-
-    @staticmethod
-    def pprint_dice(dice: List[Die]) -> None:
-        print(Dice.pprint_str(dice))
-
-    def pprint_roll_history(self) -> None:
-        for roll in self.roll_history:
-            self.pprint_dice(roll)
             
-    def freeze_die(self, ind: int):
-        if not self.dice[ind].is_frozen:
-            self.dice[ind].toggle_freeze()
+    def freeze(dice=None, all_dice=False):
+        pass
 
-    def unfreeze_die(self, ind: int):
-        if self.dice[ind].is_frozen:
-            self.dice[ind].toggle_freeze()
-
-    def freeze_dice(self, indexes: List[int]):
-        for ind in indexes:
-            self.freeze_die(ind)
-
-    def unfreeze_dice(self, indexes: List[int]):
-        for ind in indexes:
-            self.unfreeze_die(ind)
-    
-    def freeze_all_dice(self):
-        self.freeze_dice(range(self.count))
-
-    def unfreeze_all_dice(self):
-        self.unfreeze_dice(range(self.count))
-
+    def unfreeze(dice=None, all_dice=False):
+        pass
