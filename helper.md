@@ -1,3 +1,6 @@
+> Example module:
+> [tomchen/example_pypi_package]('https://github.com/tomchen/example_pypi_package/tree/main')
+
 to activate venv in wsl environment:
 ```
 source .venv/bin/activate
@@ -8,14 +11,19 @@ to deactivate venv in wsl environment:
 deactivate
 ```
 
-to build module:
+try using python build (need to add project toml to include additional package dependencies for build)
 ```
-python3 setup.py bdist_wheel sdist
+pip install --upgrade build
 ```
 
-to install module in local venv for testing:
+to build module:
 ```
-pip install dist/diceengine-0.0.0.tar.gz
+python -m build
+```
+
+to install module in local venv for live testing while developing:
+```
+pip install --editable .
 ```
 
 to import module classes into unittests for testing:
