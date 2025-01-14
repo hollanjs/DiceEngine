@@ -5,7 +5,6 @@ from .die import Die
 from .dice import Dice
 
 
-
 class RollManager:
     """
     Manages dice-rolling logic by holding a single `Dice` object internally.
@@ -130,3 +129,52 @@ class RollManager:
         This only affects the dice pool for subsequent rolls.
         """
         self._dice.remove_highest_roll()
+
+    def __validate_method_params_freeze_unfreeze(self, dice: Die | List[Die] | None, all_dice: bool) -> None:
+        if not dice and not all_dice:
+            raise ValueError(
+                'No input provided - expected input for dice parameter or all_dice=True')
+
+        if dice is not None and all_dice:
+            raise ValueError(
+                'You cannot input a value for the dice parameter and set all_dice=True')
+
+        if isinstance(dice, Die):
+            return
+
+        if isinstance(dice, list) and all(isinstance(d, Die) for d in dice):
+            return
+
+        if not dice and all_dice:
+            return
+
+        non_die_values = [d for d in (dice if isinstance(dice, list) else [
+                                      dice]) if not isinstance(d, Die)]
+        if non_die_values:
+            raise ValueError(
+                'One or more values passed in for dice '
+                'is not a subclass of Die or a list of objects that are subclasses of type Die: '
+                f'{", ".join(map(str, non_die_values))}'
+            )
+
+    def freeze(self, dice: Die | List[Die] | None = None, all_dice: bool = False) -> None:
+        self.__validate_method_params_freeze_unfreeze(
+            dice=dice, all_dice=all_dice)
+        if isinstance(dice, Die):
+            dice.is_frozen or dice.toggle_freeze()
+        elif isinstance(dice, List) and all([isinstance(_, Die) for _ in dice]):
+            for die in dice:
+                self.freeze(die)
+        elif all_dice:
+            self.freeze(self.dice)
+
+    def unfreeze(self, dice: Die | List[Die] | None = None, all_dice: bool = False) -> None:
+        self.__validate_method_params_freeze_unfreeze(
+            dice=dice, all_dice=all_dice)
+        if isinstance(dice, Die):
+            dice.is_frozen and dice.toggle_freeze()
+        elif isinstance(dice, List) and all([isinstance(_, Die) for _ in dice]):
+            for die in dice:
+                self.unfreeze(die)
+        elif all_dice:
+            self.unfreeze(self.dice)
