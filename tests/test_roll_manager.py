@@ -50,6 +50,26 @@ User Feedback / Error Handling
 [ ] Provide boundary inputs like removing the only die in the pool and confirm subsequent rolls behave as expected.
 
 
+############################################
+
+Potential Tests for Additional Properties
+[ ] `history_limit`:
+    - Set a `history_limit` and roll multiple times, confirming that once the limit is reached, older entries are removed.
+    - Test edge case when `history_limit` is 0 or very small.
+[ ] `user_metadata`:
+    - Assign user-specific data (e.g., player name) to `user_metadata` and confirm it’s retained.
+    - Update or remove metadata, verifying changes persist as expected.
+
+Potential Tests for Additional Methods
+[ ] `roll_specific(dice_indexes: List[int])`:
+    - Ensure only the specified dice are rolled, while others retain their prior `rolled` values.
+    - Test invalid indexes to confirm appropriate handling or errors.
+[ ] `apply_modifier(modifier_fn: Callable[[Dice], None])`:
+    - Provide a function that modifies dice (e.g., sets all rolls above 5 to 5). Confirm changes occur as intended.
+    - Test an empty or no-op modifier to confirm no changes occur.
+[ ] `undo_last_roll()`:
+    - Roll normally, then call `undo_last_roll()`. Confirm the dice revert to their previous rolled values.
+    - Test repeated undo calls and confirm the correct historical state is restored each time.
 '''
 
 

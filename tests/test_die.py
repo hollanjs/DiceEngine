@@ -54,6 +54,25 @@ CLI or GUI-Driven Testing
 
 User Input Validation
 [ ] If your application asks a user which die to roll (d4, d6, etc.) at runtime, you could test that selecting an invalid die type yields a friendly error message.
+
+
+###########################################################
+
+Potential Tests for Additional Properties
+[ ] Test that setting a `color` or `material` property works correctly (e.g., `die.color = "red"`).
+[ ] Test that invalid color/material inputs (if restricted) raise the correct exceptions.
+
+[ ] Test that assigning a `custom_name` properly overrides or supplements the default `name` (e.g., `die.custom_name = "Lucky Die"`).
+[ ] Test string representation or console output that includes both `custom_name` and default `name`.
+
+Potential Tests for Additional Methods
+[ ] `reroll_if(condition: Callable[[int], bool])`: 
+    - Test a condition where the die should reroll (e.g., if rolled value <= 2).
+    - Test a condition where the die should not reroll, confirming no change in `rolled`.
+[ ] `to_json()` or `serialize()`:
+    - Test that calling `to_json()` returns all relevant fields (face_count, rolled, is_frozen, etc.) in the correct format.
+    - Test deserialization if implemented (i.e., `from_json()`), ensuring the die’s state is fully restored.
+
 '''
 
 import unittest

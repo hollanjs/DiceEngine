@@ -9,6 +9,28 @@ Potential Additional Methods
 [ ] `split(condition: Callable[[Die], bool]) -> (Dice, Dice)`: Splits the current dice into two new Dice objects based on a condition.
 
 
+######################################################
+
+Potential Tests for Additional Properties
+[ ] `is_all_frozen`:
+    - Freeze all dice, confirm `is_all_frozen` returns True.
+    - Unfreeze at least one die, confirm `is_all_frozen` returns False.
+[ ] `min_roll` and `max_roll`:
+    - Roll dice and confirm that `min_roll` and `max_roll` accurately reflect the lowest and highest results in `current_roll`.
+    - Test edge cases with a single die in the container.
+
+Potential Tests for Additional Methods
+[ ] `sort_by_roll(descending=False)`:
+    - Roll all dice, then call `sort_by_roll()`. Confirm the order matches ascending or descending values.
+    - Test partial or special scenarios (e.g., all dice have the same roll).
+[ ] `remove_dice(count=1)`:
+    - Remove a specified number of dice and confirm the container’s `count` and `dice` list have been reduced accordingly.
+    - Attempt removing more dice than exist, confirming the desired exception or behavior occurs.
+[ ] `split(condition: Callable[[Die], bool]) -> (Dice, Dice)`:
+    - Provide a condition that divides the dice into two sets (e.g., rolled <= 3 in one group, > 3 in another). Confirm each new `Dice` object has the correct dice.
+    - Test boundary scenarios where all dice meet or fail the condition (one result could be an empty container).
+
+
 '''
 
 
