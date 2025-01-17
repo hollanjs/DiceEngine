@@ -72,6 +72,8 @@ Potential Tests for Additional Methods
     - Test repeated undo calls and confirm the correct historical state is restored each time.
 '''
 
+import unittest
+
 
 class TestRollManagerDiceFreezeCapabilities(unittest.TestCase):
     def setUp(self):
