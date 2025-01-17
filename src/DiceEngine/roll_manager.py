@@ -1,3 +1,15 @@
+'''
+Potential Additional Properties
+[ ] `history_limit`: Limits the size of roll history if that feature exists, discarding oldest entries when exceeding the limit.
+[ ] `user_metadata`: A dictionary or similar container for storing user-specific data, like who is rolling the dice.
+
+Potential Additional Methods
+[ ] `roll_specific(dice_indexes: List[int])`: Rolls only a subset of the dice in the managed container.
+[ ] `apply_modifier(modifier_fn: Callable[[Dice], None])`: Allows external logic to modify dice or totals (e.g., special RPG rules).
+[ ] `undo_last_roll()`: Reverts the Dice object to its previous roll state if needed for an “undo” feature.
+
+'''
+
 from typing import Union, List
 
 

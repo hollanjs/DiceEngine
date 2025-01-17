@@ -1,3 +1,17 @@
+'''
+Potential Additional Properties
+[ ] `is_all_frozen`: A read-only property returning True if every Die is frozen.
+[ ] `min_roll` and `max_roll`: Quickly provide the lowest and highest current rolled values among all dice.
+
+Potential Additional Methods
+[ ] `sort_by_roll(descending: bool = False)`: Sorts dice by their rolled value.
+[ ] `remove_dice(count: int = 1)`: Removes a specified number of dice from the container, optionally from the end or beginning.
+[ ] `split(condition: Callable[[Die], bool]) -> (Dice, Dice)`: Splits the current dice into two new Dice objects based on a condition.
+
+
+'''
+
+
 from dataclasses import dataclass, field
 from typing import List, Type, Iterator
 import copy

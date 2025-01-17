@@ -13,6 +13,15 @@ TODO:
         3d6, 2d8
 [ ] add functionality for roll manager to work with dice roll history
 [ ] read through and update ai generated docstrings where necessary
+
+Potential Additional Properties
+[ ] A `color` or `material` property for aesthetic or thematic use in a game.
+[ ] A `custom_name` property so players can label their dice (e.g., “Lucky Die”).
+
+Potential Additional Methods
+[ ] `reroll_if(condition: Callable[[int], bool])`: Rolls again if the current roll meets a certain condition.
+[ ] `to_json()` or `serialize()`: Exports die details (face count, rolled value, frozen state) for persistence or network transfer.
+
 """
 
 from abc import ABC, abstractmethod
@@ -184,8 +193,9 @@ class Die(ABC):
         Returns:
             int: The result of the roll.
         """
-        if(not self.is_frozen):
-            object.__setattr__(self, "rolled", random.randint(1, self.face_count))
+        if (not self.is_frozen):
+            object.__setattr__(
+                self, "rolled", random.randint(1, self.face_count))
         return self.rolled
 
 
@@ -198,7 +208,8 @@ class FourSidedDie(Die):
 
     @override
     def console_print_face(self):
-        raise NotImplementedError(f'{self.__class__.__name__} does not implement this method')
+        raise NotImplementedError(
+            f'{self.__class__.__name__} does not implement this method')
 
 
 @dataclass(order=True, frozen=True)
@@ -215,23 +226,23 @@ class SixSidedDie(Die):
 
         [[" ", " ", " "],
          [" ", "o", " "],
-         [" ", " ", " "]], 
+         [" ", " ", " "]],
 
         [["o", " ", " "],
          [" ", " ", " "],
-         [" ", " ", "o"]], 
+         [" ", " ", "o"]],
 
         [["o", " ", " "],
          [" ", "o", " "],
-         [" ", " ", "o"]], 
+         [" ", " ", "o"]],
 
         [["o", " ", "o"],
          [" ", " ", " "],
-         ["o", " ", "o"]], 
+         ["o", " ", "o"]],
 
         [["o", " ", "o"],
          [" ", "o", " "],
-         ["o", " ", "o"]], 
+         ["o", " ", "o"]],
 
         [["o", " ", "o"],
          ["o", " ", "o"],
@@ -256,7 +267,8 @@ class EightSidedDie(Die):
 
     @override
     def console_print_face(self):
-        raise NotImplementedError(f'{self.__class__.__name__} does not implement this method')
+        raise NotImplementedError(
+            f'{self.__class__.__name__} does not implement this method')
 
 
 @dataclass(order=True, frozen=True)
@@ -268,7 +280,8 @@ class TenSidedDie(Die):
 
     @override
     def console_print_face(self):
-        raise NotImplementedError(f'{self.__class__.__name__} does not implement this method')
+        raise NotImplementedError(
+            f'{self.__class__.__name__} does not implement this method')
 
 
 @dataclass(order=True, frozen=True)
@@ -280,7 +293,8 @@ class TwelveSidedDie(Die):
 
     @override
     def console_print_face(self):
-        raise NotImplementedError(f'{self.__class__.__name__} does not implement this method')
+        raise NotImplementedError(
+            f'{self.__class__.__name__} does not implement this method')
 
 
 @dataclass(order=True, frozen=True)
@@ -292,7 +306,8 @@ class TwentySidedDie(Die):
 
     @override
     def console_print_face(self):
-        raise NotImplementedError(f'{self.__class__.__name__} does not implement this method')
+        raise NotImplementedError(
+            f'{self.__class__.__name__} does not implement this method')
 
 
 @dataclass(order=True, frozen=True)
@@ -304,4 +319,5 @@ class OneHundredSidedDie(Die):
 
     @override
     def console_print_face(self):
-        raise NotImplementedError(f'{self.__class__.__name__} does not implement this method')
+        raise NotImplementedError(
+            f'{self.__class__.__name__} does not implement this method')
