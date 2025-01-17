@@ -1,13 +1,71 @@
+'''ADDITIONAL TESTS TO CONSIDER
+
+Coverage / Unit Tests
+###########################################################
+Tests for console_print_face
+[ ] Right now, only SixSidedDie implements console_print_face. You might want explicit tests that roll a SixSidedDie for all possible outcomes (1–6) and then confirm that the printed ASCII art is correct for each face.
+[ ] You could also test that calling console_print_face on any of the other dice (where it is not implemented) raises the correct NotImplementedError.
+
+Edge Cases for Arithmetic Operators
+[ ] Try passing in other non-integer, non-Die objects (e.g., strings, floats, or custom objects) to make sure the ValueError is raised appropriately for +, -, *, /.
+[ ] Check that division by a Die with a rolled value of 0 correctly raises ZeroDivisionError.
+
+Testing Invalid or Custom Face Counts
+[ ] Although the code uses frozen classes for fixed-face dice, you might consider a scenario where someone tries to instantiate a Die with zero or negative faces. Even if that’s not part of your official API, a thorough test suite would confirm that the class either rejects invalid face counts or fails gracefully.
+
+Testing Equality and Comparisons with Different Dice Classes
+[ ] The tests for equality and comparison currently use dice of the same type (SixSidedDie vs. SixSidedDie). You may want to confirm that comparisons between different classes (e.g., FourSidedDie vs. SixSidedDie) either work as expected or raise an error, depending on your intended behavior.
+
+Additional Tests for Randomness / Distribution
+[ ] While you wouldn’t unit-test randomness in a strict sense, you could run statistical distribution tests to ensure all faces are showing up in the correct proportions (especially for large sample rolls). This goes beyond simple unit-testing, but can still be included to confirm each face is equally likely.
+
+Freezing / Unfreezing Behavior
+[ ] You already have tests that confirm a die doesn’t change value while frozen across many rolls. You might add coverage verifying that if you toggle from frozen to unfrozen, it does indeed allow changes again on subsequent rolls.
+
+String Representation Tests
+[ ] You have tests confirming __str__() returns d<face_count>. You could expand that to confirm behavior when certain attributes (like rolled) have changed, though that shouldn’t affect __str__() as currently implemented.
+
+Test Setting rolled Directly
+[ ] The current tests use object.__setattr__ to override rolled. You could add coverage explicitly ensuring that rolled cannot be changed normally since it’s a frozen dataclass. This ensures attempts like die.rolled = 3 raise an exception.
+
+
+Functional Tests
+###########################################################
+Persistence or Serialization
+[ ] If these dice are persisted between sessions (e.g., saving a game state), you could add tests for serializing a die’s state (face count, rolled value, and freeze state) and then deserializing it back. This confirms that the die reconstitutes with the same state.
+
+Batches / Pools of Dice
+[ ] Tests that roll a batch of dice simultaneously or in sequence, confirming that sums, differences, or other aggregate operations produce the correct result.
+
+Integration with Other Systems
+[ ] In a real RPG or board game setting, you might have a “Roll” function that calls die.roll() multiple times under certain conditions (advantage/disadvantage in some game mechanics). Checking that these external conditions produce expected results for the dice would be a higher-level functional test.
+
+Conditional Rules
+[ ] If there are game-specific constraints (like exploding dice in certain RPG systems, or re-roll on 1, etc.), tests could be added to ensure the library can handle or extend those behaviors properly.
+
+
+Interactive Tests
+###########################################################
+Console I/O Tests for SixSidedDie.console_print_face
+[ ] You might have a simple interactive test confirming that rolling a SixSidedDie and calling console_print_face indeed prints a correct ASCII face. This is more of a manual/integration scenario—some projects automate it by capturing stdout and confirming it matches an expected pattern.
+
+CLI or GUI-Driven Testing
+[ ] If dice are used from a CLI or GUI (for example, a small console game), you might set up an integration test that prompts a user to roll a die, freeze it, and then confirm the console messages or displayed output is correct.
+
+User Input Validation
+[ ] If your application asks a user which die to roll (d4, d6, etc.) at runtime, you could test that selecting an invalid die type yields a friendly error message.
+'''
+
 import unittest
 from typing import Type
 
 from src.DiceEngine import (
-    FourSidedDie, 
-    SixSidedDie, 
-    EightSidedDie, 
-    TenSidedDie, 
-    TwelveSidedDie, 
-    TwentySidedDie, 
+    FourSidedDie,
+    SixSidedDie,
+    EightSidedDie,
+    TenSidedDie,
+    TwelveSidedDie,
+    TwentySidedDie,
     OneHundredSidedDie,
     die,
 )
@@ -227,7 +285,7 @@ class DieMethodTestCases(unittest.TestCase):
     def test_setting_ceiling_divide(self):
         raise NotImplementedError(
             "Create tests for test_setting_ceiling_divide")
-    
+
     def test_freezing_roll(self):
         self.assertFalse(self.twenty_sided_a.is_frozen)
         self.twenty_sided_a.toggle_freeze()
@@ -238,7 +296,7 @@ class DieMethodTestCases(unittest.TestCase):
     def test_frozen_roll(self):
         # hard to test other than rolling many times and ensuring no change
         # chance of no change over 1,000,000 rolls is very slim... but still possible...
-        
+
         # force object state
         object.__setattr__(self.twenty_sided_a, "rolled", 9)
         object.__setattr__(self.twenty_sided_a, "is_frozen", True)
@@ -251,14 +309,14 @@ class DieMethodTestCases(unittest.TestCase):
     def test_unfrozen_roll(self):
         # much easier to test change
         # chance of change over 1,000 rolls is very likely
-        
+
         # force object state
         object.__setattr__(self.twenty_sided_a, "rolled", 9)
         object.__setattr__(self.twenty_sided_a, "is_frozen", False)
 
         # ensure a roll other than 9 occured in 1,000 rolls
-        self.assertTrue(any(filter(lambda x: x != 9, [self.twenty_sided_a.roll() for _ in range(1000)])))
-
+        self.assertTrue(
+            any(filter(lambda x: x != 9, [self.twenty_sided_a.roll() for _ in range(1000)])))
 
 
 if __name__ == '__main__':

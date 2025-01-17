@@ -1,3 +1,57 @@
+'''ADDITIONAL TESTING TO CONSIDER
+
+Coverage / Unit Tests
+###########################################
+RollManager Initialization
+[ ] Test passing a single Die, confirming it becomes a Dice container internally.
+[ ] Test passing a list of Dice to confirm correct internal representation.
+[ ] Test passing an empty list to confirm ValueError is raised.
+[ ] Test passing an invalid type to confirm TypeError is raised.
+
+Rolling Logic
+[ ] Test `roll_with_advantage` ensuring the extra die is added, lowest roll is removed, and total is correct.
+[ ] Test `roll_with_disadvantage` ensuring the extra die is added, highest roll is removed, and total is correct.
+[ ] Test repeated calls to advantage or disadvantage in succession.
+
+Freeze / Unfreeze Method Validation
+[ ] Confirm that freezing/unfreezing dice works when done via `RollManager` rather than directly on `Dice`.
+[ ] Check that invalid calls (e.g., both `dice` parameter and `all_dice=True`) raise the correct error.
+
+Remove Lowest / Highest Roll
+[ ] Ensure these methods behave correctly when the dice pool has only 1 die.
+[ ] Confirm removing the same roll multiple times raises an error or behaves correctly if the die no longer exists.
+
+Functional Tests
+###########################################
+Integration of RollManager with Dice
+[ ] Test scenario with multiple consecutive advantage/disadvantage rolls and confirm correct totals in each state.
+[ ] Verify that a user can add dice, roll, freeze, unfreeze, remove highest roll, then roll again without errors.
+
+Bulk Rolling
+[ ] Roll hundreds of times to confirm distribution is sensible (especially with advantage and disadvantage).
+[ ] Check performance when a large number of dice are managed (e.g., 50+ dice).
+
+Edge Cases in Real Gameplay
+[ ] Remove dice, then add new dice, freeze some of them, roll with advantage, and confirm final total is as expected.
+[ ] Confirm roll history (if integrated) remains consistent after multiple remove/add/freeze/unfreeze cycles.
+
+Interactive Tests
+###########################################
+Console Interaction
+[ ] Simulate a CLI flow where a user chooses between normal roll, advantage, or disadvantage, confirms correct output each time.
+[ ] User attempts freeze/unfreeze commands on specific dice or all dice, checks the resulting roll outputs in a live session.
+
+Live Removal / Addition
+[ ] A user removes the lowest roll die after a normal roll, re-rolls, then checks if the total changes accordingly.
+[ ] A user adds multiple dice, then tries rolling with disadvantage to confirm the new dice are included in the final total.
+
+User Feedback / Error Handling
+[ ] Supply invalid options (e.g., trying to remove dice from an empty pool or freezing an invalid reference) to confirm proper error messages.
+[ ] Provide boundary inputs like removing the only die in the pool and confirm subsequent rolls behave as expected.
+
+
+'''
+
 import unittest
 
 from src.DiceEngine import (

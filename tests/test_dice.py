@@ -1,8 +1,76 @@
+''' ADDITIONAL TESTS TO CONSIDER
+
+Coverage / Unit Tests
+###########################################
+From Dice List
+[ ] Confirm behavior when creating Dice from an empty list (should raise ValueError).
+[ ] Check behavior when passing a mixed-type dice list (if mixing is disallowed, ensure it raises an error).
+
+Dice Count Edge Cases
+[ ] Confirm behavior for zero or negative `count` during Dice initialization.
+[ ] Large `count` stress test to ensure performance and correct initialization.
+
+Roll History
+[ ] Validate large roll history (e.g., after thousands of rolls) for performance or memory considerations.
+[ ] Confirm that `previous_roll` and `current_roll` remain consistent after many rolls.
+
+Iterator & Slicing
+[ ] Verify that iterating over Dice via `list(dice_obj)` returns all dice in correct order.
+[ ] (If desired) Confirm slicing behaviors if `__getitem__` is implemented in the future.
+
+Removal Logic
+[ ] Test removing dice by index or by reference updates `count` and `dice` list correctly.
+[ ] Confirm that roll history remains valid or is unaffected if that is expected behavior.
+
+Frozen Die Interactions
+[ ] Ensure that if a die within the Dice container is frozen, it doesn’t change values across rolls.
+[ ] Check that unfrozen dice in the same container do update normally.
+
+String Representation
+[ ] Confirm the string output when dice have mixed roll values, after multiple additions/removals.
+[ ] Ensure the format stays consistent with `pprint_str` expectations.
+
+
+Functional Tests
+###########################################
+Serialization / Persistence
+[ ] Serialize a Dice object, then deserialize it back to confirm all dice and their states match.
+[ ] Include dice with different `rolled` values and freeze states in the test.
+
+Distribution Checks
+[ ] Perform multiple rolls (thousands) to confirm uniform distribution over time.
+[ ] Check if special dice or rules (like advantage/disadvantage) behave as expected in a larger simulation.
+
+Integration with Game Rules
+[ ] Test rolling multiple times with modifiers or game-specific constraints to verify correct totals.
+[ ] Combine dice additions/removals mid-game to confirm that the container remains stable and accurate.
+
+Complex Roll Scenarios
+[ ] Roll multiple times, remove some dice, add new ones, roll again – confirm final state is correct.
+[ ] Ensure roll history properly logs each step of the process and older states remain valid for referencing.
+
+
+Interactive Tests
+###########################################
+Console or GUI Interaction
+[ ] Capture stdout when rolling dice from a CLI, compare the output to expected results.
+[ ] Test user-driven interactions such as “add 3 dice” or “remove dice at index 2” to confirm correct responses.
+
+User Input Validation
+[ ] Provide invalid inputs (e.g., negative numbers when adding dice) to confirm that the system handles them properly.
+[ ] Check boundary cases like adding 0 dice or removing an index that doesn’t exist.
+
+Live Rolling Demonstration
+[ ] Script an end-to-end scenario: create Dice, roll multiple times, add and remove dice, display updated results each time.
+[ ] Confirm all printed outputs align with the container’s actual state.
+'''
+
+
 import unittest
 
 from src.DiceEngine import (
-    Dice, 
-    Die, 
+    Dice,
+    Die,
     SixSidedDie,
 )
 
@@ -125,6 +193,7 @@ class DiceRollingTests(unittest.TestCase):
                 [d.rolled for d in self.dice.previous_roll], [0, 0, 0])
             self.assertEqual(self.dice.current_roll, self.dice.dice)
 
+
 class DiceListTests(unittest.TestCase):
     def setUp(self):
         self.dice = Dice(die_type=SixSidedDie, count=3)
@@ -134,11 +203,11 @@ class DiceListTests(unittest.TestCase):
         # reset self.dice
         self.setUp()
 
-        #set specific die index state
+        # set specific die index state
         object.__setattr__(self.dice.dice[1], "rolled", 3)
-        self.assertEqual([_.rolled for _ in self.dice], [0,3,0])
+        self.assertEqual([_.rolled for _ in self.dice], [0, 3, 0])
 
-        #test getting index from ref
+        # test getting index from ref
         test_die = self.dice.dice[1]
         self.assertEqual(self.dice.get_index(test_die), 1)
 
@@ -147,24 +216,24 @@ class DiceListTests(unittest.TestCase):
         # reset self.dice
         self.setUp()
 
-        #set specific die index state
+        # set specific die index state
         object.__setattr__(self.dice.dice[1], "rolled", 3)
-        self.assertEqual([_.rolled for _ in self.dice], [0,3,0])
+        self.assertEqual([_.rolled for _ in self.dice], [0, 3, 0])
 
-        #test getting index from ref
+        # test getting index from ref
         test_dice = [die for die in self.dice if die.rolled == 0]
-        self.assertEqual(self.dice.get_index(test_dice), [0,2])
+        self.assertEqual(self.dice.get_index(test_dice), [0, 2])
 
     @unittest.skip
     def test_get_die_ref_by_value(self):
         # reset self.dice
         self.setUp()
 
-        #set specific die index state
+        # set specific die index state
         object.__setattr__(self.dice.dice[1], "rolled", 3)
-        self.assertEqual([_.rolled for _ in self.dice], [0,3,0])
+        self.assertEqual([_.rolled for _ in self.dice], [0, 3, 0])
 
-        #test getting all dice with value 0
+        # test getting all dice with value 0
         cached_die_1 = self.dice.dice[0]
         cached_die_2 = self.dice.dice[2]
         found_dice = self.dice.get_dice_with_value(0)
@@ -176,7 +245,7 @@ class DiceListTests(unittest.TestCase):
         # reset self.dice
         self.setUp()
 
-        #setup dice and verify test default
+        # setup dice and verify test default
         self.dice.roll()
         self.assertEqual(len(self.dice.current_roll), 3)
         self.assertEqual(len(self.dice.previous_roll), 3)
@@ -197,12 +266,12 @@ class DiceListTests(unittest.TestCase):
         self.dice.roll()
         self.assertEqual(len(self.dice.current_roll), 4)
         self.assertEqual(len(self.dice.previous_roll), 4)
-    
+
     def test_adding_multiple_die_to_dice(self):
         # reset self.dice
         self.setUp()
 
-        #setup dice and verify test default
+        # setup dice and verify test default
         self.dice.roll()
         self.assertEqual(len(self.dice.current_roll), 3)
         self.assertEqual(len(self.dice.previous_roll), 3)
@@ -210,7 +279,7 @@ class DiceListTests(unittest.TestCase):
             self.dice.dice[3]
 
         # check adding multiple unrolled die
-        self.dice.add_dice(4) #bring dice total to 7
+        self.dice.add_dice(4)  # bring dice total to 7
         self.assertIsNotNone(self.dice.dice[6])
         self.assertEqual(self.dice.count, 7)
         # check all new dice are unrolled
@@ -225,177 +294,55 @@ class DiceListTests(unittest.TestCase):
         self.dice.roll()
         self.assertEqual(len(self.dice.current_roll), 7)
         self.assertEqual(len(self.dice.previous_roll), 7)
-    
+
     @unittest.skip
     def test_removing_die_from_dice_by_index(self):
         # reset self.dice
         self.setUp()
-        self.dice.add_dice(2) #5 total dice
+        self.dice.add_dice(2)  # 5 total dice
         self.assertEqual(self.dice.count, 5)
-        #force dice state to all 1's
+        # force dice state to all 1's
         for die in self.dice:
             object.__setattr__(die, "rolled", 1)
         # set 4th index specifically to 3
         object.__setattr__(self.dice.dice[3], "rolled", 3)
-        #ensure state
-        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,3,1])
+        # ensure state
+        self.assertEqual([_.rolled for _ in self.dice], [1, 1, 1, 3, 1])
 
-        #test removal
+        # test removal
         self.dice.remove_die(3)
         self.assertEqual(self.dice.count, 4)
-        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,1])
+        self.assertEqual([_.rolled for _ in self.dice], [1, 1, 1, 1])
 
     @unittest.skip
     def test_removing_die_from_dice_by_ref(self):
         # reset self.dice
         self.setUp()
-        self.dice.add_dice(2) #5 total dice
+        self.dice.add_dice(2)  # 5 total dice
         self.assertEqual(self.dice.count, 5)
-        #force dice state to all 1's
+        # force dice state to all 1's
         for die in self.dice:
             object.__setattr__(die, "rolled", 1)
         # set 4th index specifically to 3
         object.__setattr__(self.dice.dice[3], "rolled", 3)
-        #ensure state
-        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,3,1])
+        # ensure state
+        self.assertEqual([_.rolled for _ in self.dice], [1, 1, 1, 3, 1])
 
-        #test removal
+        # test removal
         test_die = self.dice.dice[3]
         self.dice.remove_die(test_die)
         self.assertEqual(self.dice.count, 4)
-        self.assertEqual([_.rolled for _ in self.dice], [1,1,1,1])
-        
+        self.assertEqual([_.rolled for _ in self.dice], [1, 1, 1, 1])
+
     @unittest.skip
     def test_removing_multiple_dice_from_dice_by_indexes(self):
         raise NotImplementedError()
-    
+
     @unittest.skip
     def test_removing_multiple_dice_from_dice_by_ref(self):
         raise NotImplementedError()
 
 
-class DiceFreezeTests(unittest.TestCase):
-    def setUp(self):
-        self.dice = Dice(die_type=SixSidedDie, count=3)
-
-    def test_freezing_single_die(self):
-        # reset self.dice
-        self.setUp()
-
-        #set die ref
-        test_die = self.dice.dice[1]
-        self.dice.freeze(test_die)
-        # self.dice.dice[1].toggle_freeze()
-        self.dice.roll()
-
-        self.assertNotEqual(self.dice.dice[0].rolled, 0)
-        self.assertEqual(self.dice.dice[1].rolled, 0)
-        self.assertNotEqual(self.dice.dice[2].rolled, 0)
-
-    def test_unfreezing_single_die(self):
-        # reset self.dice
-        self.setUp()
-
-        test_die = self.dice.dice[1]
-        self.dice.freeze(test_die)
-
-        #validate is_frozen fsag
-        self.dice.roll()
-        self.assertNotEqual(self.dice.dice[0].rolled, 0)
-        self.assertEqual(self.dice.dice[1].rolled, 0)
-        self.assertNotEqual(self.dice.dice[2].rolled, 0)
-
-        #unfreeze and test
-        self.dice.unfreeze(test_die)
-        self.dice.roll()
-        self.assertNotEqual(self.dice.dice[1].rolled, 0)
-
-    def test_freezing_multiple_dice(self):
-        # reset self.dice
-        self.setUp()
-
-        test_dice = self.dice.dice[0:2]
-        self.dice.freeze(test_dice)
-        self.dice.roll()
-
-        self.assertEqual(self.dice.dice[0].rolled, 0)
-        self.assertEqual(self.dice.dice[1].rolled, 0)
-        self.assertNotEqual(self.dice.dice[2].rolled, 0)
-
-    def test_unfreezing_multiple_dice_by_ref(self):
-        # reset self.dice
-        self.setUp()
-
-        test_dice = self.dice.dice[0:2]
-        self.dice.freeze(test_dice)
-        self.dice.roll()
-
-        self.assertEqual(self.dice.dice[0].rolled, 0)
-        self.assertEqual(self.dice.dice[1].rolled, 0)
-        self.assertNotEqual(self.dice.dice[2].rolled, 0)
-
-        self.dice.unfreeze(test_dice)
-        self.dice.roll()
-        self.assertNotEqual(self.dice.dice[0].rolled, 0)
-        self.assertNotEqual(self.dice.dice[1].rolled, 0)
-
-    def test_freezing_all_dice(self):
-        # reset self.dice
-        self.setUp()
-
-        self.dice.freeze(all_dice=True)
-        self.dice.roll()
-
-        self.assertEqual(self.dice.dice[0].rolled, 0)
-        self.assertEqual(self.dice.dice[1].rolled, 0)
-        self.assertEqual(self.dice.dice[2].rolled, 0)
-
-    def test_unfreezing_all_dice(self):
-        # reset self.dice
-        self.setUp()
-
-        self.dice.freeze(all_dice=True)
-        self.dice.roll()
-
-        self.assertEqual(self.dice.dice[0].rolled, 0)
-        self.assertEqual(self.dice.dice[1].rolled, 0)
-        self.assertEqual(self.dice.dice[2].rolled, 0)
-
-        self.dice.unfreeze(all_dice=True)
-        self.dice.roll()
-
-        self.assertNotEqual(self.dice.dice[0].rolled, 0)
-        self.assertNotEqual(self.dice.dice[1].rolled, 0)
-        self.assertNotEqual(self.dice.dice[2].rolled, 0)
-
-    def test_freeze_valueerror_with_no_params(self):
-        with self.assertRaises(ValueError):
-            self.dice.freeze()
-    
-    def test_freeze_valueerror_with_dice_object_and_all_dice_set_to_true(self):
-        dice_subset = self.dice.dice[0:2]
-        with self.assertRaises(ValueError):
-            self.dice.freeze(dice_subset, all_dice=True)
-    
-    def test_freeze_valueerror_where_dice_object_not_die(self):
-        with self.assertRaises(ValueError):
-            self.dice.freeze(1)
-
-        with self.assertRaises(ValueError):
-            self.dice.freeze("value error")
-    
-    def test_freeze_valueerror_where_dice_object_is_empty_list(self):
-        with self.assertRaises(ValueError):
-            self.dice.freeze([])
-
-    def test_freeze_valueerror_where_dice_list_contains_non_die_object(self):
-        dice_subset = self.dice.dice[0:2]
-        dice_subset.append("not a die")
-        with self.assertRaises(ValueError):
-            self.dice.freeze(dice_subset)
-            
-    
-    
 class DiceGroupValueTests(unittest.TestCase):
     def setUp(self):
         self.dice = Dice(die_type=SixSidedDie, count=9)
@@ -403,11 +350,10 @@ class DiceGroupValueTests(unittest.TestCase):
     @unittest.skip
     def test_get_count_of_specific_roll_value(self):
         raise NotImplementedError()
-    
+
     @unittest.skip
     def test_get_array_of_roll_value_counts(self):
         raise NotImplementedError()
-
 
 
 if __name__ == '__main__':

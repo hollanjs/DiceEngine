@@ -1,0 +1,29 @@
+based on this class:
+
+```Python
+
+
+
+```
+
+and this unit test file:
+```Python
+
+
+
+```
+
+what coverage, unit, functional, and interactive tests am I missing when you take into account in the real world what a die should be able to do?
+
+Please provide your answers in the following format:
+```
+Testing Category
+###########################################
+Suggested Test Area
+[ ] Suggested test
+[ ] Suggested test
+
+Suggested Test Area
+[ ] Suggested test
+[ ] Suggested test
+```
